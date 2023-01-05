@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./tools/jquery.min.js"></script>
+    <style>
+        #mouse {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 设置flag 判断其状态来决定是否执行下一次操作。 -->
+    <img id="mouse" src="./4.webp" alt="" width="100px">
+</body>
+<script>
+    $(function () {
+        let timer = null;
+        let w = 100;
+        $(document).on('mousemove', function (e) {
+            //判断timer是否null,不是就不执行本次操作。
+            if (timer) { return }
+
+            w = w + 1;
+            $('#mouse').css('width', w + 'px')
+            timer = setTimeout(function () {
+
+                $('#mouse').css('top', e.pageY + 'px').css('left', e.pageX + 'px')
+
+                timer = null;
+            }, 20);
+        })
+
+    })
+</script>
+
+</html>

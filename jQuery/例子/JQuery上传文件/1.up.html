@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../jquery.min.js"></script>
+    <link rel="stylesheet" href="../../../bootstrap-4.2.1-dist/css/bootstrap.css">
+</head>
+
+<body>
+    <input type="file" name="" id="file1">
+    <button id="btn">上传</button>
+    <div id="loading" style="display:none">
+        <div class="spinner-border text-primary  " role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <span class="small text-primary">正在上传....</span>
+    </div>
+
+
+    <img src="" alt="" id="img">
+</body>
+<script>
+    $(function () {
+        //监听所有的AJAX
+        $(document).ajaxStart(function () {
+            $('#loading').show()
+        })
+        $(document).ajaxStop(function () {
+            $('#loading').hide()
+        })
+
+        $('#btn').on('click', function () {
+            //转化为原生的DOM
+            var files = $('#file1')[0].files;
+            if (files.length <= 0) {
+                return alert('请先选择文件！');
+            } else {
+
+                var fd = new FormData();
+                fd.append('attr', files[0]);
+                $.ajax({
+                    method: 'POST',
+                    url: 'http://www.liulongbin.top:3006/api/upload/avatar',
+                    data: fd,
+                    //不修改context-type
+                    contentType: false,
+                    //不对formData中的数据进行url编码，直接发送原始数据
+                    processData: false,
+                    success: function (res) {
+                        if (res.status == 200) {
+                            $('#img')[0].src = 'http://www.liulongbin.top:3006' + res.url;
+                            console.log(res.message);
+                        }
+                        else {
+                            console.log(res.message);
+                        }
+                    }
+                });
+                // var xhr = new XMLHttpRequest();
+                // xhr.open('POST', 'http://www.liulongbin.top:3006/api/upload/avatar')
+                // xhr.send(fd)
+                // xhr.onreadystatechange = function () {
+
+                //     if (xhr.readyState == 4 && xhr.status == 200) {
+                //         let data = JSON.parse(xhr.responseText);
+                //         if (data.status == 200) {
+                //             $('#img')[0].src = 'http://www.liulongbin.top:3006' + data.url;
+                //         }
+                //         else {
+                //             console.log(data.message);
+                //         }
+                //     }
+                // }
+
+            }
+        })
+    })
+</script>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../../../bootstrap-4.2.1-dist/css/bootstrap.css">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/template-web.js"></script>
+    <script src="./js/news.js"></script>
+</head>
+
+<body class="container">
+    <ul class="list-unstyled" id="list-box">
+
+    </ul>
+</body>
+<script type="text/html" id="tep-news">
+{{each data}}
+<li class="media mb-4">
+    <a class="d-flex" href="#">
+        <img src="{{`http://www.liulongbin.top:3006${$value.img}`}}" alt="">
+        
+    </a>
+    <div class="media-body ml-2">
+
+        <h4 class="media-title">{{$value.title}}</h4>
+        <div class="tags">
+            {{each $value.tags}}
+            <span class="badge badge-dark">{{$value}}</span>
+            {{/each}}
+        </div>
+        <div class="footer">
+            <div class="float-left">
+                <span>{{$value.source}}</span>&nbsp;&nbsp;
+                <span> {{$value.time |TimesGuolv}}</span>
+            </div>
+            <span class="float-right text-muted">评论数：{{$value.cmtcount}}</span>
+        </div>
+    </div>
+</li>
+{{/each}}
+</script>
+
+</html>

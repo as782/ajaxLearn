@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../axios/axios.js"></script>
+</head>
+
+<body>
+    <button id="btn">get</button>
+    <button id="btn1">post</button>
+    <button id="btn2">get1</button>
+    <button id="btn3">post1</button>
+
+    <script>
+        // var btn = document.querySelector('#btn');
+        // var btn1 = document.querySelector('#btn1');
+        btn.addEventListener('click', function () {
+            let url = 'http://www.liulongbin.top:3006/api/get'
+            let pOBJ = { name: '王志', age: 32 }
+
+            axios.get(url, { params: pOBJ }).then(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            )
+        })
+        btn1.addEventListener('click', function () {
+            let url = 'http://www.liulongbin.top:3006/api/post'
+            let obj = { name: '王志', age: 32 }
+
+            axios.post(url, obj).then(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            )
+        })
+        btn2.addEventListener('click', function () {
+            let url = 'http://www.liulongbin.top:3006/api/get'
+            let obj = { name: '发送到', age: 23 }
+
+            axios({
+                method: 'get',
+                url,
+                params: obj
+            }).then(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            )
+        })
+        btn3.addEventListener('click', function () {
+            let url = 'http://www.liulongbin.top:3006/api/post'
+            let obj = { name: '第三方', age: 123 }
+
+            axios({ method: 'post', url, data: obj }).then(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            )
+        })
+    </script>
+</body>
+
+</html>

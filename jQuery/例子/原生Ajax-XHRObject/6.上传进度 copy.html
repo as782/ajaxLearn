@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- x选择文件 -->
+    <input type="file" name="attr" id="file1">
+
+    <button id="onload">上传</button>
+
+    <img src="" alt="" id="img" width="300px">
+    <script>
+        let file1 = document.querySelector('#file1')
+        let loadBtn = document.querySelector('#onload')
+        //发起上传文件请求
+        var xhr = new XMLHttpRequest()
+
+
+        // 监听按钮上传，判断是否上传了文件。
+        loadBtn.addEventListener('click', function () {
+            // 获取文件列表
+            let files1 = file1.files
+            if (files1.length <= 0) {
+                return alert('请先选择上传文件！')
+            }
+            //添加文件到formData中
+            let fd = new FormData()
+            fd.append('attr', files1[0])
+
+            // 计算上传进度
+            xhr.upload.onprogress = function (e) {
+                // e.lengthComputable 布尔值 表示当前上传的文件是否可计算
+                if (e.lengthComputable) {
+                    // e.loaded 已传输字节  e.total 总共字节
+                    var current1 = Math.ceil((e.loaded / e.total) * 100)
+                    console.log(current1)
+                }
+
+            }
+
+
+            xhr.open('POST', 'http://www.liulongbin.top:3006/api/upload/avatar')
+
+            xhr.send(fd)
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let data = JSON.parse(xhr.responseText)
+                    if (data.status == 200) {
+                        //如果上传成功就在页面渲染图片，设置img的src
+                        let img = document.querySelector('#img')
+                        img.src = 'http://www.liulongbin.top:3006' + data.url
+                        console.log(data.message);
+                    } else {
+                        //上传失败
+                        console.log(data.message);
+                    }
+                }
+            }
+        })
+
+
+    </script>
+
+</body>
+
+</html>

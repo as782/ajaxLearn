@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索</title>
+    <link rel="stylesheet" href="./tools/bootstrap.css">
+    <script src="./tools/jquery.min.js"></script>
+    <script src="./tools/axios.js"></script>
+    <style>
+        .recomandlist {
+            position: absolute;
+            display: none;
+            transition: 1s;
+            width: 432px;
+            right: 415px;
+            top: 40px;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .list_c>a {
+            transition: all 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-group d-flex mx-auto my-4 w-50">
+            <input type="text" class="form-control mr-2" name="search" id="searchBox" placeholder="">
+            <button class="btn btn-danger w-25" id="searchBtn">搜索</button>
+        </div>
+        <div id="list" class="recomandlist">
+            <div class="list-group" id="list_c">
+
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./tools/template-web.js"></script>
+<script>
+    $(function () {
+        let inpBox = $('#searchBox');
+        let timer = null;
+        //输入框监听输入
+        inpBox.on('keyup', function () {
+
+            //按下先清除定时器
+            clearTimeout(timer);
+            let keywords = inpBox.val().trim();
+            if (keywords.length <= 0) {
+                //没有关键字就清空
+                return $('#list_c').empty().hide();
+            }
+            else {
+                debounceSearch(keywords);
+            }
+        });
+        //获得焦点
+        inpBox.on('focus', function () {
+            $('#list').show();
+        });
+        //失去焦点就清除记录
+        inpBox.on('blur', function () {
+            $('#list_c').html('');
+            inpBox.val('');
+        });
+
+        //防抖函数
+        function debounceSearch(keyword) {
+            timer = setTimeout(function () {
+                getSuggestList(keyword);
+            }
+                , 500);
+        }
+        //封装 获取搜索建议列表函数
+        function getSuggestList(keyword) {
+            //发起请求
+            $.ajax({
+                url: `https://suggest.taobao.com/sug?q=${keyword}`,
+                dataType: 'jsonp',
+                success: function (res) {
+                    let data = res.result;
+                    //每次搜索都清除上一次的内容。
+                    // $('#list_c').html('');
+                    // for (let i in data) {
+                    //     $('#list_c').append(`<a href="#" class="list-group-item">${data[i]}</a>`)
+                    // }
+                    let suggest_tmp = template('tmp_suggest', res)
+                    $('#list_c').html(suggest_tmp).show();
+                }
+            })
+        }
+    })
+</script>
+<!-- 列表模板 -->
+<script type="text/html" id="tmp_suggest">
+    {{each result}}
+        <a href="#" class="list-group-item">{{$value[0]}}</a>
+    {{/each}}
+</script>
+
+</html>

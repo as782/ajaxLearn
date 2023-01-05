@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./MyAjax.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    MyAjax({
+        method: 'GET',
+        url: 'http://www.liulongbin.top:3006/api/cmtlist',
+        success: function (res) {
+            if (res.status != 200) {
+                return alert('失败');
+            }
+            console.log(res.data);
+        }
+    });
+    MyAjax({
+        method: 'post',
+        data: { bookname: '江西放假最晚', author: 'ecut', publisher: 'sss' },
+        url: 'http://www.liulongbin.top:3006/api/addbook',
+        success: function (res) {
+            if (res.status != 201) {
+                return alert('失败');
+            }
+            console.log(res.data);
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../../bootstrap-4.2.1-dist/css/bootstrap.css">
+    <script src="../jquery.min.js"></script>
+
+    <script src="https:cdn.staticfile.org/popper.js/1.14.6/umd/popper.js"></script>
+    <script src="../../bootstrap-4.2.1-dist/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header  bg-primary">图书</div>
+        <div class="card-body">
+
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <label for="">书名</label>
+                    <input type="text" class="form-control" name="" id="bookname" aria-describedby="helpId"
+                        placeholder="">
+
+                </div>
+                <div class="form-group col-4">
+                    <label for="">作者</label>
+                    <input type="text" class="form-control" name="" id="author" aria-describedby="helpId"
+                        placeholder="">
+
+                </div>
+                <div class="form-group col-4">
+                    <label for="">出版社</label>
+                    <input type="text" class="form-control" name="" id="publisher" aria-describedby="helpId"
+                        placeholder="">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary" id="addBtn">添加</button>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+
+        </tbody>
+    </table>
+</body>
+<script>
+    $(function () {
+        // $('#addBtn').on('click', getBookList);
+
+        //删除
+        $('#tb').on('click', '.del', function () {
+
+            // $(this).parents('tr').remove();
+            // 获取自定义属性
+            let id = $(this).attr('data-id');
+            console.log(id);
+            $.get('http://www.liulongbin.top:3006/api/delbook', { id: id }, function (res) {
+                if (res.status != 200) {
+                    alert('失败');
+                }
+                getBookList();
+            });
+        });
+        //添加
+        $('#addBtn').on('click', function () {
+            let bookname = $('#bookname').val().trim();
+            let author = $('#author').val().trim();
+            let publisher = $('#publisher').val().trim();
+            if ($('#bookname').val() == '' || $('#author').val() == '' || $('#publisher').val == '') {
+                alert('请全部输入内容！')
+            } else {
+                $.post('http://www.liulongbin.top:3006/api/addbook', { bookname: bookname, author: author, publisher: publisher }, function (res) {
+                    if (res.status != 201) {
+                        alert('失败');
+                    }
+                    getBookList();
+                    $('#bookname').val('');
+                    $('#author').val('');
+                    $('#publisher').val('');
+                });
+            }
+
+        });
+        // 获取图书列表
+        function getBookList() {
+            $.get('http://www.liulongbin.top:3006/api/getbooks', function (res) {
+                // console.log(res);
+                let rows = [];
+                if (!res.status == 200) {
+                    alert('失败！');
+                } else {
+                    $.each(res.data, function (i, item) {
+                        rows.push(`
+                        <tr ><td>${item.id}</td> 
+                         <td>${item.bookname}</td> 
+                         <td>${item.author}</td> 
+                         <td>${item.publisher}</td>
+                         <td><a href="javascript:;" class="del" data-id='${item.id}'>删除</a></td>
+                        </tr>
+                        `);
+                    });
+                    $('#tb').empty().append(rows.join(''));
+                }
+            })
+        };
+
+        getBookList();
+
+
+    })
+</script>
+
+</html>
